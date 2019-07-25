@@ -1,0 +1,583 @@
+
+<!DOCTYPE HTML>
+<html lang="en" >
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Bootstrap-ecommerce by Vosidiy">
+
+<title>Make Bake and Take a Cake</title>
+
+<link rel="shortcut icon" type="image/x-icon" href="images/logo.png">
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+<!-- Font awesome 5 -->
+<link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+<!-- plugin: fancybox  -->
+<script src="plugins/fancybox/fancybox.min.js" type="text/javascript"></script>
+<link href="plugins/fancybox/fancybox.min.css" type="text/css" rel="stylesheet">
+
+<!-- plugin: owl carousel  -->
+<link href="plugins/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet">
+<link href="plugins/owlcarousel/assets/owl.theme.default.css" rel="stylesheet">
+<script src="plugins/owlcarousel/owl.carousel.min.js"></script>
+
+<!-- custom style -->
+<link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+
+ 
+
+  
+
+
+
+<script> 
+
+    $(document).ready(function () {
+        $('#example').DataTable();
+    });
+
+    
+
+</script>
+
+
+<!-- custom javascript -->
+<script src="js/script.js" type="text/javascript"></script>
+
+ <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+    <script>
+        var sampleApp = angular.module('CakeApp',[]);
+        sampleApp.controller('CakeController', CakeController);
+
+        function CakeController($http,$scope) {
+            var ctrl = this;
+ 
+            var commonHeaders = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded;',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            };
+
+			ctrl.addCakeShow =true;
+
+             ctrl.addCakeBtn = function(){
+                       var cakeData= {
+                                name : ctrl.name,
+                                flavor : ctrl.flavor,
+                                description : ctrl.description,
+                                currency : ctrl.currency,
+								price : ctrl.price,
+                                category : ctrl.category,
+								feature : ctrl.feature,
+                                picture : ctrl.picture,
+								shape : ctrl.shape,
+                                weight : ctrl.weight
+                            }
+
+                      var cakeDataApi = "/addCake";
+                      $http({
+                              method: 'POST',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+			  
+			  
+			   ctrl.showAddCake = function(){
+				ctrl.addCakeShow = true;
+				ctrl.cakeDetailsShow = false;
+				ctrl.orderDetailsShow = false;
+              };
+			  
+			   ctrl.showCakeDetails = function(){
+				ctrl.addCakeShow = false;
+				ctrl.cakeDetailsShow = true;
+				ctrl.orderDetailsShow = false;
+              };
+			  
+			  ctrl.showOrderDetails = function(){
+				ctrl.addCakeShow = false;
+				ctrl.cakeDetailsShow = false;
+				ctrl.orderDetailsShow = true;
+              };
+			  
+			  
+ 
+
+
+        };
+
+    </script>
+
+
+</head>
+<body ng-controller='CakeController as ctrl' ng-app="CakeApp"> 
+
+
+<header class="section-header">
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+  	<a class="navbar-brand" href="home.html"><img class="logo" src="images/logo.png" alt="alibaba style e-commerce html template file" title="alibaba e-commerce html css theme"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTop">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown"><a href="#" class="nav-link" >   About Us </a>
+        </li>
+		<li class="nav-item dropdown"><a href="#" class="nav-link" >   Photo Gallary </a>
+        </li>
+		<li class="nav-item dropdown"><a href="#" class="nav-link" >   Contact Us </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <div class="col-auto">
+			<div class="widget-header dropdown">
+				<a href="#" data-toggle="dropdown" data-offset="20,10">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+						<div class="text-wrap text-dark">
+							Welcome,<br>Sandeep Wagh
+						</div>
+					</div>
+				</a>
+				 
+			</div>  <!-- widget-header .// -->
+			</div> <!-- col.// -->
+		
+		
+      </ul> <!-- navbar-nav.// -->
+    </div> <!-- collapse.// -->
+  </div>
+</nav>
+
+<section class="header-main" >
+	<div class="container">
+<div class="row-sm align-items-center">
+	<div class="col-lg-4-24 col-sm-2">
+	 
+	</div>
+	<div class="col-lg-11-24 col-sm-8">
+			 
+	</div> <!-- col.// -->
+	<div class="col-lg-9-24 col-sm-12">
+	
+		<div class="widgets-wrap float-right row no-gutters py-1">
+			<div class="col-auto">
+			  <!-- widget-header .// -->
+			</div> <!-- col.// -->
+			<div class="col-auto" ng-click="ctrl.showAddCake();">
+				<a href="#" class="widget-header">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm fa fa-plus"></i></div>
+						<div class="text-wrap text-dark">
+							ADD CAKE
+						</div>
+					</div>
+				</a>
+			</div> <!-- col.// -->
+			<div class="col-auto" ng-click="ctrl.showCakeDetails();">
+				<a href="#" class="widget-header">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm  fa fa-list"></i></div>
+						<div class="text-wrap text-dark">
+							
+							<div>ADDED CAKE DETAILS</div>
+						</div>
+					</div>
+				</a>
+			</div> <!-- col.// -->
+			<div class="col-auto" ng-click="ctrl.showOrderDetails();">
+				<a href="#" class="widget-header">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm  fa fa-list"></i></div>
+						<div class="text-wrap text-dark">
+							
+							<div>ORDER DETAILS</div>
+						</div>
+					</div>
+				</a>
+			</div> <!-- col.// -->
+		</div> <!-- widgets-wrap.// row.// -->
+	</div> <!-- col.// -->
+</div> <!-- row.// -->
+	</div> <!-- container.// -->
+</section> <!-- header-main .// -->
+</header> <!-- section-header.// -->
+
+<!-- ========================= SECTION TOPBAR ========================= -->
+<section class="section-topbar border-top padding-y-sm">
+ 
+</section>
+<!-- ========================= SECTION TOPBAR .// ========================= -->
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content bg padding-y-sm" ng-if="ctrl.addCakeShow">
+<div class="container"> 
+
+<div class="row">
+<div class="col-xl-12 col-md-12 col-sm-12">
+
+ <h3>ADD NEW CAKE</h3>
+<main class="card">
+	<div class="row no-gutters">
+		
+		
+		<aside class="col-sm-6">
+<article class="card-body">
+
+	<div class="row">
+		<div class="col-sm-6">
+			<dl class="">
+			  <dt>Display Name </dt>
+			  <dd><input class="form-control" name="name" ng-model="name" id="name" value="" placeholder="Display Name" type="text"></dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+		 
+	</div> <!-- row.// -->
+	<div class="row">
+		
+		<div class="col-sm-6">
+			<dl class="">
+				  <dt>Picture </dt>
+				  <dd>
+					<div class="custom-file">
+					  <input type="file" class="custom-file-input" id="customFile">
+					  <label class="custom-file-label" for="customFile">Choose file</label>
+					</div>
+				  </dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+		<div class="col-sm-6">
+			<dl class="">
+			  <dt>Price</dt>
+			  <dd><input class="form-control" name="price" id="price" value="" ng-model="price" placeholder="Price" type="number"></dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
+	<div class="row">
+		<div class="col-sm-6">
+			<dl class="">
+				  <dt>Weight Type </dt>
+				  <dd>
+				  	<label class="form-check form-check-inline">
+					  <input class="form-check-input" name="weight" id="weight" value="250gm" type="radio" ng-model="weight">
+					  <span class="form-check-label">250gm</span>
+					</label>
+					<label class="form-check form-check-inline">
+					  <input class="form-check-input" name="weight" id="weight" value="500gm" type="radio" ng-model="weight">
+					  <span class="form-check-label">500gm</span>
+					</label>
+					<label class="form-check form-check-inline">
+					  <input class="form-check-input" name="weight" id="weight" value="1kg" type="radio" ng-model="weight">
+					  <span class="form-check-label">1kg</span>
+					</label>
+				 
+				  </dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+		<div class="col-sm-6">
+			<dl class="">
+			  <dt>Quantity</dt>
+			  <dd><input class="form-control" name="qty" id="qty" value="" ng-model="quantity" placeholder="Quantity" type="number"></dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
+	
+	<div class="row">
+		<div class="col-sm-6">
+			<dl class="">
+				  <dt>Feature </dt>
+				  <dd>
+				  	<label class="form-check form-check-inline">
+					  <input class="form-check-input" name="feature" id="feature" value="Veg" type="radio" ng-model="feature">
+					  <span class="form-check-label">Veg</span>
+					</label>
+					<label class="form-check form-check-inline">
+					  <input class="form-check-input" name="feature" id="feature" value="Non-Veg" type="radio" ng-model="feature">
+					  <span class="form-check-label">Non-Veg</span>
+					</label>
+				 
+				  </dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+		<div class="col-sm-6">
+			<dl class="">
+			  <dt>Cake Type</dt>
+			  <dd>
+				<select class="form-control" ng-model="type">
+				  <option>Select</option>
+				  <option>Cream</option>
+				  <option>Bread</option>
+				</select>			
+			</dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
+	
+	 
+	
+	<div class="row">
+		<div class="col-sm-12">
+			<dl class="">
+			  <dt> Description </dt>
+			  <dd><input class="form-control" name="name" id="name" value="" ng-model="description" placeholder="Description" type="text"></dd>
+			</dl>  <!-- item-property .// -->
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
+	
+	
+	
+	<div class="row">
+		<div class="col-sm-12">
+			 <button class="btn  btn-warning" style="width:100%;" ng-click="addCakeBtn();"> ADD CAKE </button>
+		</div> <!-- col.// -->
+	</div> <!-- row.// -->
+	
+	
+	 
+
+	
+	
+	
+	
+<!-- short-info-wrap .// -->
+</article> <!-- card-body.// -->
+		</aside> <!-- col.// -->
+	</div> <!-- row.// -->
+</main> <!-- card.// -->
+ 
+
+<!-- PRODUCT DETAIL .// -->
+
+</div> <!-- col // -->
+
+</div> <!-- row.// -->
+
+
+
+</div><!-- container // -->
+</section>
+<!-- ========================= SECTION CONTENT .END// ========================= -->
+
+
+
+<section class="section-content bg padding-y" ng-if="ctrl.cakeDetailsShow">
+<div class="container">
+
+<div class="row">
+	 <main class="col-sm-9">
+
+<h3>ADDED CAKE DETAILS</h3>
+<article class="card card-product">
+
+	<div class="card-body">
+	
+	<div class="row">
+		<aside class="col-sm-3">
+			<div class="img-wrap"><img src="images/mix-nut.jpg"></div>
+		</aside> <!-- col.// -->
+		<article class="col-sm-6">
+				<h4 class="title"> Mix Nut Cake  </h4>
+				<div class="rating-wrap  mb-2">
+					<ul class="rating-stars">
+						<li style="width:80%" class="stars-active"> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> 
+						</li>
+						<li>
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> 
+						</li>
+					</ul>
+					<div class="label-rating">132 reviews</div>
+					<div class="label-rating">154 orders </div>
+				</div> <!-- rating-wrap.// -->
+				<p> Mixed Nut Cake. Muscovado is a dark, unrefined sugar which brings the sweet rich taste of molasses to the cake. </p>
+				<dl class="dlist-align">
+				  <dt>Cake Flavor</dt>
+				  <dd>Vanilla</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Cake Type</dt>
+				  <dd>Creame, Bread</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Cake Shape</dt>
+				  <dd>Round</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Weight available</dt>
+				  <dd>250 gm, 500 gm, 1 kg</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Quantity</dt>
+				  <dd>15</dd>
+				</dl>
+			
+		</article> <!-- col.// -->
+		 
+	</div> <!-- row.// -->
+	</div> <!-- card-body .// -->
+</article> <!-- card product .// -->
+
+<article class="card card-product">
+	<div class="card-body">
+	<div class="row">
+		<aside class="col-sm-3">
+			<div class="img-wrap"><img src="images/cake_PNG13127.png"></div>
+		</aside> <!-- col.// -->
+		<article class="col-sm-6">
+				<h4 class="title"> Eggless Truffle Cake </h4>
+				<div class="rating-wrap mb-2">
+					<ul class="rating-stars">
+						<li style="width:50%" class="stars-active"> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> 
+						</li>
+						<li>
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> <i class="fa fa-star"></i> 
+							<i class="fa fa-star"></i> 
+						</li>
+					</ul>
+					<div class="label-rating">12 reviews</div>
+					<div class="label-rating">154 orders </div>
+				</div> <!-- rating-wrap.// -->
+				<p> Chocolate truffle is a yummy and delicious dessert. This is just irresistible. This is eggless cake. </p>
+				<dl class="dlist-align">
+				  <dt>Cake Flavor</dt>
+				  <dd>Vanilla</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Cake Type</dt>
+				  <dd>Creame, Bread</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Cake Shape</dt>
+				  <dd>Round</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Weight available</dt>
+				  <dd>250 gm, 500 gm, 1 kg</dd>
+				</dl>  <!-- item-property-hor .// -->
+				<dl class="dlist-align">
+				  <dt>Quantity</dt>
+				  <dd>12</dd>
+				</dl>
+		</article> <!-- col.// -->
+		 
+	</div> <!-- row.// -->
+	</div> <!-- card-body .// -->
+</article> <!-- card product .// -->
+
+	</main> <!-- col.// -->
+</div>
+
+</div> <!-- container .//  -->
+</section>
+
+
+
+
+
+<section class="section-content bg padding-y" ng-if="ctrl.orderDetailsShow">
+<div class="container">
+
+<div class="row">
+	 <main class="col-sm-9">
+
+<h3>ORDER DETAILS</h3> 
+
+<article class="card card-product">
+	<div class="card-body">
+	<div class="row">
+		 
+		<article class="col-sm-12">
+				
+<table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Sr.NO.</th>
+                <th>Cake Name</th>
+                <th>Cake Price</th>
+                <th>Payment (Online/Cash)</th>
+                <th>Delivery (Home/Pickup)</th>
+				<th>Delivery Date</th>
+                 
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>1</td>
+                <td>Mixed Nut Cake</td>
+                <td>&#x20b9; 299</td>
+                <td>Online</td>
+                <td>Home</td>
+				<td>27/07/2019</td>
+                
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Chocolate Truffle Cake</td>
+                <td>&#x20b9; 245</td>
+                <td>Cash</td>
+                <td>Pickup</td>
+				<td>25/07/2019</td>
+                 
+            </tr>
+             
+        </tbody>
+         
+    </table>
+		</article> <!-- col.// -->
+		 
+	</div> <!-- row.// -->
+	</div> <!-- card-body .// -->
+</article> <!-- card product .// -->
+
+	</main> <!-- col.// -->
+</div>
+
+</div> <!-- container .//  -->
+</section>
+
+
+ 
+<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+<!------ Include the above in your HEAD tag ---------->
+
+<script language="JavaScript" src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
+<script language="JavaScript" src="https://cdn.datatables.net/1.10.13/js/jquery.dataTables.min.js" type="text/javascript"></script>
+<script language="JavaScript" src="https://cdn.datatables.net/1.10.13/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
+<script language="JavaScript" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js" type="text/javascript"></script>
+<script language="JavaScript" src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js" type="text/javascript"></script>
+ 
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.13/css/dataTables.bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css" />
+
+
+</body>
+</html>

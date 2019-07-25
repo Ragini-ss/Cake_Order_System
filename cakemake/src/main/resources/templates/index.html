@@ -1,0 +1,2013 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="pragma" content="no-cache" />
+    <meta http-equiv="cache-control" content="max-age=604800" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="author" content="Bootstrap-ecommerce by Vosidiy">
+
+    <title>Make Bake and Take a Cake</title>
+
+    <link href="images/logo.png" rel="shortcut icon" type="image/x-icon">
+
+    <!-- jQuery -->
+    <script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+    <!-- Bootstrap4 files-->
+    <script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+    <link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+    <!-- Font awesome 5 -->
+    <link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+    <!-- custom style -->
+    <link href="css/ui.css" rel="stylesheet" type="text/css"/>
+    <link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+
+    <!-- custom javascript -->
+    <script src="js/script.js" type="text/javascript"></script>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+    <script>
+        var sampleApp = angular.module('CakeApp',[]);
+        sampleApp.controller('CakeController', CakeController);
+
+
+
+        function CakeController($scope, $rootScope, $http,$q) {
+            var ctrl = this;
+
+            var commonHeaders = {
+                'Accept': 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded;',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0',
+                transformRequest : angular.identity,
+            };
+
+
+            initialize();
+
+
+            function initialize(){
+                ctrl.addCakeShow = true;
+                ctrl.cakeDetailsShow = false;
+                ctrl.roleMyOrders = false;
+                ctrl.roleUser = true;
+                ctrl.roleAdmin = false;
+                ctrl.roleUserUsername = false;
+                ctrl.roleUserAdmin = false;
+                ctrl.cakeDetailsShowSingle = false;
+                ctrl.showPaymentGateway = false;
+                categoryList1();
+                featureList1();
+                cakeDetails();
+            }
+
+
+             ctrl.buyNowForPaymentGTW = function(){
+                ctrl.showPaymentGateway = true;
+             }
+
+             ctrl.register = function(){
+
+                       if(ctrl.password == ctrl.confirmpassword){
+                        return false;
+                       }
+
+                       var cakeData= {
+                                email : ctrl.email,
+                                password : ctrl.password,
+                                confirmpassword : ctrl.confirmpassword,
+								mobile : ctrl.mobile,
+								fullname : ctrl.fullname
+                            }
+
+                      var cakeDataApi = "/register";
+                      $http({
+                              method: 'POST',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           console.log(response);
+                            if(response.data){
+                                ctrl.showRegisterMsg = true;
+                                ctrl.email = '';
+                                ctrl.password = '';
+                                ctrl.confirmpassword = '';
+								ctrl.mobile= '';
+								ctrl.fullname = '';
+                            }
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+
+
+			ctrl.login = function(){
+                      var getAllAPIData= {
+                        email : ctrl.loginEmail,
+                        password : ctrl.loginPassword
+                      };
+
+                      var getAllAPI = "/login";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                      	   console.log(response);
+                      	   if(response.data.role == 'User'){
+                                ctrl.roleUserUsername = true;
+                                ctrl.roleUser = true;
+                                ctrl.username = response.data.username;
+                                ctrl.count = response.data.count;
+                      	   }else{
+                      	       showAdminDetails();
+                               ctrl.username = response.data.username;
+                               ctrl.cakeMasterCount = response.data.cakeMasterCount;
+                      	   }
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.byPrice = function(){
+                      var getAllAPIData= {
+                        min : ctrl.min,
+                        max : ctrl.max
+                      };
+
+                      var getAllAPI = "/byPrice";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                      	   console.log(response);
+                      	   ctrl.cakeList = response.data;
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+              ctrl.byCategory = function(type){
+                      var getAllAPIData= {};
+
+                        if(type == 'Default'){
+                             getAllAPIData= {
+                                searchTerm : ctrl.searchTerm
+                            };
+                        }else{
+                            getAllAPIData= {
+                                searchTerm : type
+                            };
+                        }
+
+                      var getAllAPI = "/byCategory";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                      ctrl.cakeList = response.data;
+                      	   console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              function categoryList1(){
+                      var getAllAPIData= {
+
+                      };
+
+                      var getAllAPI = "/categoryList";
+                      $http({
+                              method: 'GET',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           ctrl.catList = response.data;
+                      	   console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+            function featureList1(){
+                      var getAllAPIData= {
+
+                      };
+                      var getAllAPI = "/featureList";
+                      $http({
+                              method: 'GET',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           ctrl.featureList = response.data;
+                      	   console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.byFeature= function(){
+
+                      var getAllAPIData= {
+                            feature : ctrl.feature
+                      };
+                      var getAllAPI = "/byFeature";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           ctrl.cakeList = response.data;
+                      	   console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+
+                      console.log(ctrl.albumNameArray);
+              };
+
+
+
+
+              ctrl.addCakeBtn = function(){
+
+                       var cakeData= {
+                                name : ctrl.name,
+                                flavor : ctrl.flavor,
+                                description : ctrl.description,
+								price : ctrl.price,
+                                category : ctrl.category,
+								feature : ctrl.feature,
+								shape : ctrl.shape,
+                                weight : ctrl.weight,
+                                quantity : ctrl.quantity,
+                                picture : ctrl.file,
+                                type: ctrl.type
+                            }
+
+                      console.log(ctrl.file);
+                      var cakeDataApi = "/addCake";
+                      $http({
+                              method: 'POST',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           console.log(response);
+                           //saveDoc(response.data.id);
+                           cakeDetails();
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+             function saveDoc(id) {
+                var deferred = $q.defer();
+                var file = ctrl.file;
+                var formData = new FormData();
+                formData.append('file', file);
+                formData.append('id', id);
+
+                $http.put('/upload', formData,{
+                    transformRequest : angular.identity,
+                    headers : {
+                        'Content-Type' : undefined
+                    }})
+                    .then(
+                        function (response) {
+                            deferred.resolve(response.data);
+                            console.log(response.data);
+                            cakeDetails();
+                        },
+                        function (errResponse) {
+                            cakeDetails();
+                            deferred.reject(errResponse);
+                        }
+                    );
+                return deferred.promise;
+            };
+
+
+
+            $scope.uploadFile = function (input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.readAsDataURL(input.files[0]);
+                reader.onload = function (e) {
+
+                    $('#photo-id').attr('src', e.target.result);
+                    var canvas = document.createElement("canvas");
+                    var imageElement = document.createElement("img");
+
+                    imageElement.setAttribute = $('<img>', { src: e.target.result });
+                    var context = canvas.getContext("2d");
+                    imageElement.setAttribute.load(function()
+                    {
+
+                        canvas.width = this.width;
+                        canvas.height = this.height;
+
+
+                        context.drawImage(this, 0, 0);
+                        var base64Image = canvas.toDataURL("image/png");
+
+
+                        ctrl.file= base64Image;
+                    });
+                }
+            }
+        }
+
+
+			ctrl.getAllCakeDetails = function(){
+                      var getAllAPIData= {};
+
+                      var getAllAPI = "/getAll";
+                      $http({
+                              method: 'GET',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+
+                            ctrl.tempCakeList = response.data;
+                            for(var i=0;i<ctrl.tempCakeList.length;i++){
+                                    ctrl.tempCakeList.image.replace(/^data:image\/\w+;base64,/, "");
+                            }
+
+                      		ctrl.cakeList = ctrl.tempCakeList;
+                      	    ctrl.addCakeShow = false;
+            				ctrl.cakeDetailsShow = true;
+            				ctrl.roleMyOrders = false;
+                            console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+              function cakeDetails(){
+                      var getAllAPIData= {};
+
+                      var getAllAPI = "/getAll";
+                      $http({
+                              method: 'GET',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                      		ctrl.cakeList = response.data;
+                      	    ctrl.addCakeShow = false;
+            				ctrl.cakeDetailsShow = true;
+                            console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.deleteCakeBtn = function(id){
+                      var getAllAPIData= {id : id};
+
+                      var getAllAPI = "/deleteById";
+                      $http({
+                              method: 'DELETE',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                      		ctrl.cakeList = response.data;
+                      	    ctrl.addCakeShow = false;
+                      	    ctrl.roleMyOrders = false;
+            				ctrl.cakeDetailsShow = true;
+                            console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.buyNowBtn = function(id){
+                      var getAllAPIData= {id : id};
+
+                      var getAllAPI = "/getById";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                            ctrl.cakeDetailsList = '';
+                      		ctrl.cakeDetailsList = response.data;
+                      	    showcakeDetailsShowSingle();
+                            console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.orderDetails = function(){
+                      var getAllAPIData= {};
+
+                      var getAllAPI = "/orderDetails";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                            ctrl.orderDetailsList = '';
+                      		ctrl.orderDetailsList = response.data;
+                      	    showMyOrderDetailsAdmin();
+                      	    ctrl.addCakeShow = false;
+            				ctrl.cakeDetailsShow = false;
+            				ctrl.roleMyOrders = true;
+                            console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.orderDetailsByEmailId = function(){
+                      var getAllAPIData= {};
+
+                      var getAllAPI = "/orderDetailsByEmailId";
+                      $http({
+                              method: 'POST',
+                              url: getAllAPI,
+                              data: $.param(getAllAPIData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                            ctrl.orderDetailsList = '';
+                      		ctrl.orderDetailsList = response.data;
+                      	    showMyOrderDetailsUser();
+
+                            console.log(response);
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+
+              ctrl.showAddCake = function(){
+				ctrl.addCakeShow = true;
+				ctrl.cakeDetailsShow = false;
+				ctrl.roleMyOrders = false;
+              };
+
+
+               function showUserDetails(){
+                   ctrl.roleUserAdmin = false;
+                   ctrl.roleAdmin = false;
+                   ctrl.roleUser = true;
+                   ctrl.roleUserUsername = true;
+                   ctrl.roleCart = false;
+                   ctrl.cakeDetailsShowSingle = false;
+                   ctrl.roleMyOrders = false;
+               };
+
+               function showAdminDetails (){
+                   ctrl.roleUserAdmin = true;
+                   ctrl.roleAdmin = true;
+                   ctrl.roleUser = false;
+                   ctrl.roleUserUsername = false;
+                   ctrl.roleCart = false;
+                   ctrl.cakeDetailsShowSingle = false;
+                   ctrl.roleMyOrders = false;
+               };
+
+               function showCartDetails(){
+                   ctrl.roleUserAdmin = false;
+                   ctrl.roleAdmin = false;
+                   ctrl.roleUser = false;
+                   ctrl.roleUserUsername = false;
+                   ctrl.roleCart = true;
+                   ctrl.cakeDetailsShowSingle = false;
+                   ctrl.roleMyOrders = false;
+               };
+
+               function showcakeDetailsShowSingle(){
+                   ctrl.roleUserAdmin = false;
+                   ctrl.roleAdmin = false;
+                   ctrl.roleUser = false;
+                   ctrl.roleUserUsername = true;
+                   ctrl.roleCart = false;
+                   ctrl.cakeDetailsShowSingle = true;
+                   ctrl.roleMyOrders = false;
+               };
+
+               function showMyOrderDetailsUser(){
+                   ctrl.roleUserAdmin = false;
+                   ctrl.roleAdmin = false;
+                   ctrl.roleUser = false;
+                   ctrl.roleUserUsername = true;
+                   ctrl.roleCart = false;
+                   ctrl.cakeDetailsShowSingle = false;
+                   ctrl.roleMyOrders = true;
+               };
+               function showMyOrderDetailsAdmin(){
+                   ctrl.roleUserAdmin = true;
+                   ctrl.roleAdmin = true;
+                   ctrl.roleUser = false;
+                   ctrl.roleUserUsername = false;
+                   ctrl.roleCart = false;
+                   ctrl.cakeDetailsShowSingle = false;
+                   ctrl.roleMyOrders = true;
+               };
+
+
+
+
+
+
+               ctrl.addToCart = function(id){
+                       var cakeData= {
+                                cakeId : id,
+                                flavor : ctrl.flavor,
+                                deliveryDate : ctrl.deliveryDate,
+								price : ctrl.price,
+                                type : ctrl.type,
+								mobile : ctrl.mobile,
+								shape : ctrl.shape,
+                                weight : ctrl.weight,
+                                quantity : ctrl.qty,
+                                message : ctrl.message,
+                                delivery : ctrl.delivery
+                            }
+
+                      var cakeDataApi = "/addToCart";
+                      $http({
+                              method: 'POST',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                           console.log(response);
+
+                            showCartDetails();
+                            ctrl.cartDetails();
+
+
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.addToOrders = function(id,payMode){
+                       var cakeData= {
+                                cakeId : id,
+                                flavor : ctrl.flavor,
+                                deliveryDate : ctrl.deliveryDate,
+								price : ctrl.price,
+                                type : ctrl.type,
+								mobile : ctrl.mobile,
+								shape : ctrl.shape,
+                                weight : ctrl.weight,
+                                quantity : ctrl.qty,
+                                message : ctrl.message,
+                                delivery : ctrl.delivery,
+                                paymentMode : payMode
+                            }
+
+                      var cakeDataApi = "/addToOrders";
+                      $http({
+                              method: 'POST',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                            console.log(response);
+                            ctrl.paymentSuccess = true;
+
+                            $('#exampleModal').modal('hide');
+
+
+                            showMyOrderDetailsUser();
+                            ctrl.orderDetailsByEmailId();
+
+
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+
+
+
+              ctrl.cartDetails = function(){
+                       var cakeData= {
+
+                            }
+                      var cakeDataApi = "/cartDetailsApi";
+                      $http({
+                              method: 'GET',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                            console.log(response);
+                            ctrl.totalPrice = 0;
+                            for(var i=0;i<response.data.length;i++){
+                                ctrl.totalPrice = parseInt(ctrl.totalPrice) + parseInt(response.data[i].price);
+                            }
+                            ctrl.cartList = response.data;
+                            showCartDetails();
+
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+              ctrl.logout = function(){
+                       var cakeData= {
+
+                            }
+                      var cakeDataApi = "/logout";
+                      $http({
+                              method: 'POST',
+                              url: cakeDataApi,
+                              data: $.param(cakeData || {}),
+                              headers: commonHeaders
+                          })
+                      .then(function (response) {
+                            console.log(response);
+                            initialize();
+
+                       }, function (response) {
+                           console.log(response);
+                       });
+              };
+
+
+
+
+
+
+        };
+
+    </script>
+
+</head>
+<body ng-controller='CakeController as ctrl' ng-app="CakeApp">
+<div >
+<header class="section-header" ng-if="ctrl.roleUser || ctrl.cakeDetailsShowSingle || ctrl.roleMyOrders">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="home.html"><img class="logo" src="images/logo.png" alt="alibaba style e-commerce html template file" title="alibaba e-commerce html css theme"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTop1">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown"><a href="#" class="nav-link" >   About Us </a>
+                    </li>
+                    <li class="nav-item dropdown"><a href="#" class="nav-link" >   Photo Gallary </a>
+                    </li>
+                    <li class="nav-item dropdown"><a href="#" class="nav-link" >   Contact Us </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav" ng-if="!ctrl.roleUserUsername">
+                        <div class="col-auto">
+                            <div class="widget-header dropdown">
+                                <a href="#" data-toggle="dropdown" data-offset="20,10">
+                                    <div class="icontext">
+                                        <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                        <div class="text-wrap text-dark" data-toggle="modal" data-target="#exampleModal1" data-whatever="@mdo">
+                                            Have account? Sign up
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </div>  <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+                        <div class="col-auto">
+                            <div class="widget-header dropdown">
+                                <a href="#" data-toggle="dropdown" data-offset="20,10" aria-expanded="false">
+                                    <div class="icontext">
+                                        <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                        <div class="text-wrap text-dark">
+                                            Sign in <br>
+                                            My account <i class="fa fa-caret-down"></i>
+                                        </div>
+                                    </div>
+                                </a>
+                                <div class="dropdown-menu" x-placement="top-start" style="margin-top: 91%;margin-left: -55%;position: absolute; transform: translate3d(20px, -81px, 0px); top: 0px; left: 0px; will-change: transform;">
+                                    <form class="px-4 py-3 ng-dirty ng-invalid ng-invalid-email ng-valid-parse">
+                                        <div class="form-group">
+                                            <label>Email address</label>
+                                            <input type="email" ng-model="ctrl.loginEmail" class="form-control ng-not-empty ng-dirty ng-invalid ng-invalid-email ng-touched" placeholder="email@example.com">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Password</label>
+                                            <input type="password" ng-model="ctrl.loginPassword" class="form-control ng-valid ng-not-empty ng-dirty ng-valid-parse ng-touched" placeholder="Password">
+                                        </div>
+                                        <button type="button" class="btn btn-primary" ng-click="ctrl.login();">Sign in</button>
+                                    </form>
+                                    <hr class="dropdown-divider">
+                                </div> <!--  dropdown-menu .// -->
+                            </div>  <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+
+                </ul> <!-- navbar-nav.// -->
+
+
+                <ul class="navbar-nav" ng-if="ctrl.roleUserUsername">
+
+                    <div class="col-auto">
+                        <div class="widget-header dropdown">
+                            <a href="#" data-toggle="dropdown" data-offset="20,10">
+                                <div class="icontext">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                    <div class="text-wrap text-dark">
+                                        Welcome <br> {{ctrl.username}}
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>  <!-- widget-header .// -->
+                    </div> <!-- col.// -->
+                    <!--<div class="col-auto" ng-click="ctrl.cartDetails();">
+                        <a href="#" class="widget-header" >
+                            <div class="icontext">
+                                <div class="icon-wrap"><i class="text-warning icon-sm fa fa-shopping-cart"></i></div>
+                                <div class="text-wrap text-dark">
+                                    Order <br> Protection
+                                </div>
+                            </div>
+                        </a>
+                    </div>  -->
+                    <div class="col-auto"  style="cursor:pointer;">
+
+                            <div class="icontext" ng-click="ctrl.orderDetailsByEmailId();">
+                                <div class="icon-wrap"><i class="text-warning icon-sm fa fa-shopping-cart"></i></div>
+                                <div class="text-wrap text-dark">
+                                    My <br> Orders <span class="small round badge badge-secondary"> {{ ctrl.count }}</span>
+                                </div>
+                            </div>
+
+                    </div> <!-- col.// -->
+                    <div class="col-auto"   style="cursor:pointer;">
+                        <div class="widget-header dropdown">
+                            <a href="#" data-toggle="dropdown" data-offset="20,10">
+                                <div class="icontext" ng-click="ctrl.logout();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                    <div class="text-wrap text-dark" >
+                                        Logout
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>  <!-- widget-header .// -->
+                    </div> <!-- col.// -->
+                </ul> <!-- navbar-nav.// -->
+
+
+            </div> <!-- collapse.// -->
+        </div>
+    </nav>
+
+    <section class="header-main">
+        <div class="container">
+            <div class="row-sm align-items-center">
+                <div class="col-lg-4-24 col-sm-2">
+
+                </div>
+
+                <div class="col-lg-9-24 col-sm-12">
+
+                </div> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- container.// -->
+    </section> <!-- header-main .// -->
+</header> <!-- section-header.// -->
+
+
+    <!-- ========================= SECTION CONTENT ========================= -->
+    <section class="section-content bg padding-y" ng-if="ctrl.roleMyOrders">
+        <div class="container">
+
+            <div class="row" ng-if="ctrl.roleMyOrders">
+                <main class="col-sm-9">
+
+                    <h3>ORDER DETAILS</h3>
+
+                    <article class="card card-product">
+                        <div class="card-body">
+                            <div class="row">
+
+                                <article class="col-sm-12">
+
+                                    <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                        <thead>
+                                        <tr>
+                                            <th>Sr.NO.</th>
+                                            <th>Cake Name</th>
+                                            <th>Cake Price</th>
+                                            <th>Payment (Online/Cash)</th>
+                                            <th>Delivery (Home/Pickup)</th>
+                                            <th>Delivery Date</th>
+
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="order in ctrl.orderDetailsList">
+                                            <td>{{$index + 1}}</td>
+                                            <td>{{order.cakeName}}</td>
+                                            <td> &#x20b9; {{order.cakePrice}}</td>
+                                            <td>{{order.paymentMode}}</td>
+                                            <td>{{order.delivery}}</td>
+                                            <td>{{order.deliveryDate}}</td>
+
+
+
+                                        </tr>
+
+                                        </tbody>
+
+                                    </table>
+                                </article> <!-- col.// -->
+
+                            </div> <!-- row.// -->
+                        </div> <!-- card-body .// -->
+                    </article> <!-- card product .// -->
+
+                </main> <!-- col.// -->
+            </div>
+
+        </div> <!-- container .//  -->
+    </section>
+    <!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+
+    <!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content bg padding-y" ng-if="ctrl.roleUser">
+    <div class="container">
+
+        <div class="row">
+            <aside class="col-sm-3">
+
+                <div class="card card-filter">
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <a class="" aria-expanded="true" href="#" data-toggle="collapse" data-target="#collapse22">
+                                <i class="icon-action fa fa-chevron-down"></i>
+                                <h6 class="title">By Category</h6>
+                            </a>
+                        </header>
+                        <div style="" class="filter-content collapse show" id="collapse22">
+                            <div class="card-body">
+                                <form class="pb-3">
+                                    <div class="input-group">
+                                        <input class="form-control" placeholder="Search" ng-model="ctrl.searchTerm" type="text">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-primary" type="button" ng-click="ctrl.byCategory('Default');"><i class="fa fa-search"></i></button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                                <ul class="list-unstyled list-lg">
+                                    <li  ng-repeat="cat in ctrl.catList | filter : ctrl.searchTerm"><a href="" ng-click="ctrl.byCategory(cat.name);">{{cat.name}} <span class="float-right badge badge-light round">{{cat.count}}</span> </a></li>
+                                </ul>
+                            </div> <!-- card-body.// -->
+                        </div> <!-- collapse .// -->
+                    </article> <!-- card-group-item.// -->
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <a href="#" data-toggle="collapse" data-target="#collapse33">
+                                <i class="icon-action fa fa-chevron-down"></i>
+                                <h6 class="title">By Price  </h6>
+                            </a>
+                        </header>
+                        <div class="filter-content collapse show" id="collapse33">
+                            <div class="card-body">
+                                <div class="form-row">
+                                    <div class="form-group col-md-6">
+                                        <label>Min</label>
+                                        <input class="form-control" placeholder="&#x20b9; 0" ng-value="0" ng-model="ctrl.min" type="number">
+                                    </div>
+                                    <div class="form-group text-right col-md-6">
+                                        <label>Max</label>
+                                        <input class="form-control" placeholder=" &#x20b9; 1,0000" ng-value="1000" ng-model="ctrl.max" type="number">
+                                    </div>
+                                </div> <!-- form-row.// -->
+                                <button class="btn btn-block btn-outline-primary" type="button" ng-click="ctrl.byPrice();">Apply</button>
+                            </div> <!-- card-body.// -->
+                        </div> <!-- collapse .// -->
+                    </article> <!-- card-group-item.// -->
+                    <article class="card-group-item">
+                        <header class="card-header">
+                            <a href="#" data-toggle="collapse" data-target="#collapse44">
+                                <i class="icon-action fa fa-chevron-down"></i>
+                                <h6 class="title">By Feature </h6>
+                            </a>
+                        </header>
+                        <div class="filter-content collapse show" id="collapse44">
+                            <div class="card-body">
+                                <form>
+                                    <label class="form-check" ng-repeat="feature in ctrl.featureList">
+                                        <input class="form-check-input" value="{{feature.name}}" ng-model="ctrl.feature" name="feature" type="radio">
+                                        <span class="form-check-label">
+                                        <span class="float-right badge badge-light round">{{feature.count}}</span>
+                                        {{feature.name}}
+                                      </span>
+                                    </label>  <!-- form-check.// -->
+
+                                    <button class="btn btn-block btn-outline-primary" type="button" ng-click="ctrl.byFeature();">Apply</button>
+
+                                </form>
+                            </div> <!-- card-body.// -->
+                        </div> <!-- collapse .// -->
+                    </article> <!-- card-group-item.// -->
+                </div> <!-- card.// -->
+
+
+            </aside> <!-- col.// -->
+            <main class="col-sm-9">
+
+
+                <article class="card card-product" ng-repeat="cake in ctrl.cakeList">
+                    <div class="card-body">
+                        <div class="row">
+                            <aside class="col-sm-3">
+                                <div class="img-wrap"><img ng-src="{{cake.image}}" style="width: 100%;"/></div>
+                            </aside> <!-- col.// -->
+                            <article class="col-sm-6">
+                                <h4 class="title"> {{cake.name}}  </h4>
+                                <div class="rating-wrap  mb-2">
+
+
+                                </div> <!-- rating-wrap.// -->
+                                <p> {{cake.description}} </p>
+                                <dl class="dlist-align">
+                                    <dt>Cake Flavor</dt>
+                                    <dd>{{cake.flavor}}</dd>
+                                </dl>  <!-- item-property-hor .// -->
+                                <dl class="dlist-align">
+                                    <dt>Cake Type</dt>
+                                    <dd>{{cake.category}}</dd>
+                                </dl>  <!-- item-property-hor .// -->
+                                <dl class="dlist-align">
+                                    <dt>Cake Shape</dt>
+                                    <dd>{{cake.shape}}</dd>
+                                </dl>  <!-- item-property-hor .// -->
+                                <dl class="dlist-align">
+                                    <dt>Weight available</dt>
+                                    <dd>{{cake.weight}}</dd>
+                                </dl>  <!-- item-property-hor .// -->
+
+                            </article> <!-- col.// -->
+                            <aside class="col-sm-3 border-left">
+                                <div class="action-wrap">
+                                    <div class="price-wrap h4">
+                                        <span class="price"> &#x20b9; {{cake.price}} </span>
+
+                                    </div> <!-- info-price-detail // -->
+
+                                    <br>
+                                    <p>
+                                        <button type="button" class="btn btn-primary" style="width:65%;" ng-click="ctrl.buyNowBtn(cake.id);" ng-disabled="!ctrl.roleUserUsername"> Buy now </button>
+
+                                    </p>
+                                    <span ng-if="!ctrl.roleUserUsername" style="color:red;">Please, sign in to buy this cake !</span>
+
+                                </div> <!-- action-wrap.// -->
+                            </aside> <!-- col.// -->
+                        </div> <!-- row.// -->
+                    </div> <!-- card-body .// -->
+                </article> <!-- card product .// -->
+
+
+            </main> <!-- col.// -->
+        </div>
+
+    </div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+
+
+<div class="modal fade" id="exampleModal1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel1">Sign up form</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form class="px-4 py-3">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" ng-model="ctrl.fullname" class="form-control" placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label>Email address</label>
+                        <input type="email" ng-model="ctrl.email" class="form-control" placeholder="email@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="number" ng-model="ctrl.mobile" maxlength="10" class="form-control" placeholder="Mobile Number">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" ng-model="ctrl.password" class="form-control" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" ng-model="ctrl.onfirmpassword" class="form-control" placeholder="Confirm Password">
+                    </div>
+                    <button type="button" class="btn btn-primary" ng-click="ctrl.register();">Register</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </form>
+                <hr class="dropdown-divider">
+
+                <h3 ng-if="ctrl.showRegisterMsg">Registered Successfully !</h3>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</div>
+
+
+<div>
+
+
+
+<header class="section-header" ng-if="ctrl.roleAdmin">
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container">
+            <a class="navbar-brand" href="home.html"><img class="logo" src="images/logo.png" alt="alibaba style e-commerce html template file" title="alibaba e-commerce html css theme"></a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarTop">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item dropdown"><a href="#" class="nav-link" >   About Us </a>
+                    </li>
+                    <li class="nav-item dropdown"><a href="#" class="nav-link" >   Photo Gallary </a>
+                    </li>
+                    <li class="nav-item dropdown"><a href="#" class="nav-link" >   Contact Us </a>
+                    </li>
+                </ul>
+
+
+
+                <ul class="navbar-nav" ng-if="ctrl.roleUserAdmin">
+
+                    <div class="col-auto">
+                        <div class="widget-header dropdown">
+                            <a href="#" data-toggle="dropdown" data-offset="20,10">
+                                <div class="icontext">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                    <div class="text-wrap text-dark" >
+                                        Welcome {{ctrl.username}}
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>  <!-- widget-header .// -->
+                    </div> <!-- col.// -->
+
+                    <div class="col-auto"  style="cursor:pointer;">
+                        <div class="widget-header dropdown">
+                            <a href="#" data-toggle="dropdown" data-offset="20,10">
+                                <div class="icontext" ng-click="ctrl.logout();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                    <div class="text-wrap text-dark" >
+                                        Logout
+                                    </div>
+                                </div>
+                            </a>
+
+                        </div>  <!-- widget-header .// -->
+                    </div> <!-- col.// -->
+
+                </ul> <!-- navbar-nav.// -->
+
+
+            </div> <!-- collapse.// -->
+        </div>
+    </nav>
+
+    <section class="header-main" >
+        <div class="container">
+            <div class="row-sm align-items-center">
+
+                <div class="col-sm-12">
+                    <div class="widgets-wrap float-right row no-gutters py-1">
+                        <div class="col-auto">
+                            <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+                        <div class="col-auto" style="cursor:pointer;">
+
+                                <div class="icontext" ng-click="ctrl.showAddCake();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-plus"></i></div>
+                                    <div class="text-wrap text-dark">
+                                        Add New Cake
+                                    </div>
+                                </div>
+
+                        </div> <!-- col.// -->
+                        <div class="col-auto" style="cursor:pointer;">
+
+                                <div class="icontext" ng-click="ctrl.getAllCakeDetails();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm  fa fa-list"></i></div>
+                                    <div class="text-wrap text-dark">
+
+                                        <div>All Cake Details &nbsp; <span class="small round badge badge-secondary"> {{ ctrl.cakeMasterCount }}</span></div>
+                                    </div>
+                                </div>
+
+                        </div> <!-- col.// -->
+                        <div class="col-auto" style="cursor:pointer;">
+
+                                <div class="icontext" ng-click="ctrl.orderDetails();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm  fa fa-list"></i></div>
+                                    <div class="text-wrap text-dark">
+
+                                        <div>ORDER DETAILS</div>
+                                    </div>
+                                </div>
+
+                        </div>
+                    </div> <!-- widgets-wrap.// row.// -->
+                </div> <!-- col.// -->
+            </div> <!-- row.// -->
+        </div> <!-- container.// -->
+    </section> <!-- header-main .// -->
+</header> <!-- section-header.// -->
+
+
+
+
+
+
+    <header class="section-header" ng-if="ctrl.roleCart">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand" href="home.html"><img class="logo" src="images/logo.png" alt="alibaba style e-commerce html template file" title="alibaba e-commerce html css theme"></a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarTop12">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item dropdown"><a href="#" class="nav-link" >   About Us </a>
+                        </li>
+                        <li class="nav-item dropdown"><a href="#" class="nav-link" >   Photo Gallary </a>
+                        </li>
+                        <li class="nav-item dropdown"><a href="#" class="nav-link" >   Contact Us </a>
+                        </li>
+                    </ul>
+
+
+                    <ul class="navbar-nav">
+
+                        <div class="col-auto">
+                            <div class="widget-header dropdown">
+                                <a href="#" data-toggle="dropdown" data-offset="20,10">
+                                    <div class="icontext">
+                                        <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                        <div class="text-wrap text-dark" >
+                                            Welcome {{ctrl.username}}
+                                        </div>
+                                    </div>
+                                </a>
+
+                            </div>  <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+                        <!--<div class="col-auto"  style="cursor:pointer;">
+
+                                <div class="icontext" ng-click="ctrl.cartDetails();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-shopping-cart"></i></div>
+                                    <div class="text-wrap text-dark">
+                                        Order <br> Protection
+                                    </div>
+                                </div>
+
+                        </div> -->
+
+                        <div class="col-auto"  style="cursor:pointer;">
+                            <div class="widget-header dropdown">
+                                <div class="icontext" ng-click="ctrl.logout();">
+                                    <div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+                                    <div class="text-wrap text-dark" >
+                                        Logout
+                                    </div>
+                                </div>
+                            </div>  <!-- widget-header .// -->
+                        </div> <!-- col.// -->
+                    </ul> <!-- navbar-nav.// -->
+
+
+                </div> <!-- collapse.// -->
+            </div>
+        </nav>
+
+        <section class="header-main">
+            <div class="container">
+                <div class="row-sm align-items-center">
+                    <div class="col-lg-4-24 col-sm-2">
+
+                    </div>
+
+                    <div class="col-lg-9-24 col-sm-12">
+
+                    </div> <!-- col.// -->
+                </div> <!-- row.// -->
+            </div> <!-- container.// -->
+        </section> <!-- header-main .// -->
+    </header> <!-- section-header.// -->
+
+
+
+
+
+    <!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content bg padding-y-sm" ng-if="ctrl.roleAdmin">
+    <div class="container">
+
+        <div class="row" ng-if="ctrl.addCakeShow">
+            <div class="col-xl-12 col-md-12 col-sm-12">
+
+
+                <main class="card">
+                    <div class="row no-gutters">
+
+
+                        <aside class="col-sm-6">
+                            <article class="card-body">
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Display Name </dt>
+                                            <dd><input class="form-control" name="name" ng-model="ctrl.name" id="name" value="" placeholder="Display Name" type="text"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Cake Flavor </dt>
+                                            <dd><input class="form-control" name="flavor" ng-model="ctrl.flavor" id="flavor" value="" placeholder="Flavor" type="text"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+
+                                </div> <!-- row.// -->
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Picture </dt>
+                                            <dd>
+                                                <div class="custom-file">
+                                                    <!--<input type="file" class="custom-file-input" id="customFile" file-model="ctrl.file">-->
+                                                    <input type="file" name="file" class="custom-file-input" onchange="angular.element(this).scope().uploadFile(this)" id="photo-upload" />
+                                                    <label class="custom-file-label" for="photo-upload">Choose file</label>
+                                                </div>
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Price</dt>
+                                            <dd><input class="form-control" name="price" id="price" value="" ng-model="ctrl.price" placeholder="Price" type="number"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Weight Type </dt>
+                                            <dd>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="weight" id="weight" value="250gm" type="radio" ng-model="ctrl.weight">
+                                                    <span class="form-check-label">250gm</span>
+                                                </label>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="weight" id="weight1" value="500gm" type="radio" ng-model="ctrl.weight">
+                                                    <span class="form-check-label">500gm</span>
+                                                </label>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="weight" id="weight2" value="1kg" type="radio" ng-model="ctrl.weight">
+                                                    <span class="form-check-label">1kg</span>
+                                                </label>
+
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Quantity</dt>
+                                            <dd><input class="form-control" name="qty" id="qty" value="" ng-model="ctrl.quantity" placeholder="Quantity" type="number"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Feature </dt>
+                                            <dd>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="feature" id="feature" value="Veg" type="radio" ng-model="ctrl.feature">
+                                                    <span class="form-check-label">Veg</span>
+                                                </label>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="feature" id="feature1" value="Non-Veg" type="radio" ng-model="ctrl.feature">
+                                                    <span class="form-check-label">Non-Veg</span>
+                                                </label>
+
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Cake Type</dt>
+                                            <dd>
+                                                <select class="form-control" ng-model="ctrl.type">
+                                                    <option value=''>Select</option>
+                                                    <option value='Cream'>Cream</option>
+                                                    <option value='Bread'>Bread</option>
+                                                </select>
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Shape</dt>
+                                            <dd>
+                                                <select class="form-control" ng-model="ctrl.shape">
+                                                    <option value=''>Select</option>
+                                                    <option value='Simple'>Simple</option>
+                                                    <option value='Flat'>Flat</option>
+                                                    <option value='Rounded'>Rounded</option>
+                                                    <option value='Square'>Square</option>
+                                                    <option value='Rectangular'>Rectangular</option>
+                                                </select>
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-6">
+                                        <dl class="">
+                                            <dt>Category</dt>
+                                            <dd>
+                                                <select class="form-control" ng-model="ctrl.category">
+                                                    <option value=''>Select</option>
+                                                    <option value='Black Forest Gateau'>  Black Forest Gateau  </option>
+                                                    <option value='Pineapple Cake'>  Pineapple Cake  </option>
+                                                    <option value='Eggless Truffle Cake'>  Eggless Truffle Cake  </option>
+                                                    <option value='Mango Meringue Cake'>  Mango Meringue Cake   </option>
+                                                    <option value='Oreo Cheesecake'>  Oreo Cheesecake  </option>
+                                                    <option value='Banana Cake'>  Banana Cake   </option>
+                                                    <option value='Cherry Cheesecake'>  Cherry Cheesecake  </option>
+                                                    <option value='Coffee Cake'>  Coffee Cake  </option>
+                                                    <option value='Gluten Free Chocolate Cake'>  Gluten Free Chocolate Cake  </option>
+                                                </select>
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <dl class="">
+                                            <dt> Description </dt>
+                                            <dd><input class="form-control" name="description" id="description" value="" ng-model="ctrl.description" placeholder="Description" type="text"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+
+
+                                <div class="row">
+                                    <div class="col-sm-12">
+                                        <button class="btn  btn-warning" style="width:100%;" ng-click="ctrl.addCakeBtn();"> ADD CAKE </button>
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <!-- short-info-wrap .// -->
+                            </article> <!-- card-body.// -->
+                        </aside> <!-- col.// -->
+                    </div> <!-- row.// -->
+                </main> <!-- card.// -->
+
+            </div> <!-- col // -->
+
+        </div> <!-- row.// -->
+
+
+
+
+
+
+        <div class="row" ng-if="ctrl.cakeDetailsShow">
+
+            <div class="col-xl-12 col-md-12 col-sm-12" ng-repeat="cake in ctrl.cakeList">
+
+
+                <main class="card">
+                    <div class="row no-gutters">
+                        <aside class="col-sm-3 border-right">
+                            <article class="gallery-wrap">
+                                <div class="img-big-wrap1">
+                                    <div> <a href="{{cake.image}}" ><img ng-src="{{cake.image}}" style="width: 100%;"/></a></div>
+                                </div> <!-- slider-product.// -->
+
+                            </article> <!-- gallery-wrap .end// -->
+                        </aside>
+
+
+                        <aside class="col-sm-6">
+                            <article class="card-body">
+                                <!-- short-info-wrap -->
+                                <h3 class="title mb-3">{{cake.name}}</h3>
+
+                                <div class="mb-3">
+                                    <var class="price h3 text-warning">
+                                        <span class="currency">&#x20b9;</span><span class="num">{{cake.price}}</span>
+                                    </var>
+                                </div> <!-- price-detail-wrap .// -->
+                                <dl>
+                                    <dt>Description</dt>
+                                    <dd><p>{{cake.description}} </p></dd>
+                                </dl>
+                                <dl class="row">
+                                    <dt class="col-sm-5">Cake Flavor</dt>
+                                    <dd class="col-sm-7">{{cake.type}}</dd>
+
+                                    <dt class="col-sm-5">Cake Category</dt>
+                                    <dd class="col-sm-7">{{cake.category}} </dd>
+
+                                    <dt class="col-sm-5">Cake Shape</dt>
+                                    <dd class="col-sm-7">{{cake.shape}} </dd>
+
+                                    <dt class="col-sm-5">Weight available</dt>
+                                    <dd class="col-sm-7">{{cake.weight}} </dd>
+
+                                    <dt class="col-sm-5">Cake Type</dt>
+                                    <dd class="col-sm-7">{{cake.feature}} </dd>
+
+                                    <dt class="col-sm-5">Created Date</dt>
+                                    <dd class="col-sm-7">{{cake.created_date}} </dd>
+
+
+
+                                </dl>
+                                <div class="rating-wrap">
+
+                                    <button class="btn  btn-warning" style="width:50%;" ng-click="ctrl.deleteCakeBtn(cake.id);"> DELETE </button>
+
+                                </div> <!-- rating-wrap.// -->
+
+                                <!-- short-info-wrap .// -->
+                            </article> <!-- card-body.// -->
+                        </aside> <!-- col.// -->
+
+
+                        <aside class="col-sm-5">
+
+                        </aside> <!-- col.// -->
+                    </div> <!-- row.// -->
+                </main> <!-- card.// -->
+
+
+                <!-- PRODUCT DETAIL .// -->
+
+            </div> <!-- col // -->
+
+        </div> <!-- row.// -->
+
+
+
+        <div class="row" ng-if="ctrl.roleMyOrders">
+            <main class="col-sm-9">
+
+                <h3>ORDER DETAILS</h3>
+
+                <article class="card card-product">
+                    <div class="card-body">
+                        <div class="row">
+
+                            <article class="col-sm-12">
+
+                                <table id="example" class="table table-striped table-bordered" style="width:100%">
+                                    <thead>
+                                    <tr>
+                                        <th>Sr.NO.</th>
+                                        <th>Cake Name</th>
+                                        <th>Cake Price</th>
+                                        <th>Payment (Online/Cash)</th>
+                                        <th>Delivery (Home/Pickup)</th>
+                                        <th>Delivery Date</th>
+
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="order in ctrl.orderDetailsList">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{order.cakeName}}</td>
+                                        <td> &#x20b9; {{order.cakePrice}}</td>
+                                        <td>{{order.paymentMode}}</td>
+                                        <td>{{order.delivery}}</td>
+                                        <td>{{order.deliveryDate}}</td>
+
+
+
+                                    </tr>
+
+                                    </tbody>
+
+                                </table>
+                            </article> <!-- col.// -->
+
+                        </div> <!-- row.// -->
+                    </div> <!-- card-body .// -->
+                </article> <!-- card product .// -->
+
+            </main> <!-- col.// -->
+        </div>
+
+
+
+
+
+    </div><!-- container // -->
+</section>
+<!-- ========================= SECTION CONTENT .END// ========================= -->
+
+</div>
+
+
+
+
+
+
+
+<section class="section-content bg padding-y-sm" ng-if="ctrl.cakeDetailsShowSingle">
+    <div class="container">
+
+        <div class="row" >
+            <div class="col-xl-12 col-md-12 col-sm-12">
+
+
+                <main class="card">
+                    <div class="row no-gutters">
+                        <aside class="col-sm-3 border-right">
+                            <article class="gallery-wrap">
+                                <div class="img-big-wrap1">
+                                    <div> <a href="{{ctrl.cakeDetailsList.image}}" data-fancybox=""><img ng-src="{{ctrl.cakeDetailsList.image}}" style="width: 100%;" /></a></div>
+                                </div> <!-- slider-product.// -->
+
+                            </article> <!-- gallery-wrap .end// -->
+                        </aside>
+
+
+                        <aside class="col-sm-4 border-right">
+                            <article class="card-body">
+                                <!-- short-info-wrap -->
+                                <h3 class="title mb-3">{{ctrl.cakeDetailsList.name}}</h3>
+
+                                <div class="mb-3">
+                                    <var class="price h3 text-warning">
+                                        <span class="currency">₹</span><span class="num">{{ctrl.cakeDetailsList.price}}</span>
+                                    </var>
+                                </div> <!-- price-detail-wrap .// -->
+                                <dl>
+                                    <dt>Description</dt>
+                                    <dd><p>{{ctrl.cakeDetailsList.description}} </p></dd>
+                                </dl>
+                                <dl class="row">
+                                    <dt class="col-sm-5">Cake Flavor</dt>
+                                    <dd class="col-sm-7">{{ctrl.cakeDetailsList.flavor}}</dd>
+
+                                    <dt class="col-sm-5">Cake Type</dt>
+                                    <dd class="col-sm-7">{{ctrl.cakeDetailsList.type}} </dd>
+
+                                    <dt class="col-sm-5">Cake Shape</dt>
+                                    <dd class="col-sm-7">{{ctrl.cakeDetailsList.shape}} </dd>
+
+                                    <dt class="col-sm-5">Weight available</dt>
+                                    <dd class="col-sm-7">{{ctrl.cakeDetailsList.weight}} </dd>
+
+
+
+                                </dl>
+                                <div class="rating-wrap">
+
+
+                                </div> <!-- rating-wrap.// -->
+
+                                <!-- short-info-wrap .// -->
+                            </article> <!-- card-body.// -->
+                        </aside> <!-- col.// -->
+
+
+                        <aside class="col-sm-5">
+                            <article class="card-body">
+
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <dl class="">
+                                            <dt>Customer Name </dt>
+                                            <dd><input class="form-control" name="name" id="name123" value="" placeholder="Customer Name" type="text" ng-model="ctrl.name" ></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+
+                                </div> <!-- row.// -->
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <dl class="dlist-inline">
+                                            <dt>Mobile Number </dt>
+                                            <dd><input class="form-control" name="mobile" id="mobile2" value="" placeholder="Mobile Number" ng-model="ctrl.mobile" type="number"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-4">
+                                        <dl class="dlist-inline">
+                                            <dt>OTP </dt>
+                                            <dd><input class="form-control" name="mobile" id="mobile1" value="" placeholder="OTP" type="number" ng-model="ctrl.otp"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <dl class="dlist-inline">
+                                            <dt>Weight Type </dt>
+                                            <dd>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="inlineRadioOptionsa" id="inlineRadio2" ng-model="ctrl.weight" value="{{ctrl.cakeDetailsList.weight}}" type="radio">
+                                                    <span class="form-check-label">{{ctrl.cakeDetailsList.weight}}</span>
+                                                </label>
+
+
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-4">
+                                        <dl class="dlist-inline">
+                                            <dt>Quantity</dt>
+                                            <dd><input class="form-control" name="qty" id="qty1" value="{{ctrl.cakeDetailsList.qty}}" placeholder="Quantity" type="number" ng-model="ctrl.qty"></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <div class="row">
+                                    <div class="col-sm-6">
+                                        <dl class="dlist-inline">
+                                            <dt>Cake Type </dt>
+                                            <dd>
+                                                <label class="form-check form-check-inline">
+                                                    <input class="form-check-input" name="inlineRadioOptionsss" id="inlineRadio21" value="{{ctrl.cakeDetailsList.type}}" type="radio" ng-model="ctrl.type">
+                                                    <span class="form-check-label">{{ctrl.cakeDetailsList.type}}</span>
+                                                </label>
+
+
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                    <div class="col-sm-4">
+                                        <dl class="dlist-inline">
+                                            <dt>Delivery Date</dt>
+                                            <dd><input type="text" class="form-control" placeholder="dd/mm/yyyy" ng-model="ctrl.deliveryDate">
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <div class="row">
+
+                                    <div class="col-sm-11">
+                                        <dl class="dlist-inline">
+                                            <dt>Delivery</dt>
+                                            <dd>
+
+                                                <select class="form-control" ng-model="ctrl.delivery">
+
+                                                    <option value='Home Delivery'>Home Delivery(50 Rs. For Delivery)</option>
+                                                    <option value='Self Pickup'>Self Pickup (Free)</option>
+
+                                                </select>
+
+                                            </dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <dl class="">
+                                            <dt> Message to print on Cake </dt>
+                                            <dd><input class="form-control" name="name" ng-model="ctrl.message" placeholder="Message" type="text" /></dd>
+                                        </dl>  <!-- item-property .// -->
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+
+
+                                <div class="row">
+                                    <div class="col-sm-10">
+                                        <input type="hidden" ng-value="ctrl.cakeDetailsList.id" ng-model="ctrl.hiddenCakeId" />
+                                        <!--<button class="btn  btn-warning" style="width:100%;" ng-click="ctrl.addToCart(cake.id);" > Add to Cart </button>-->
+                                        <button class="btn  btn-warning" style="width:100%;" ng-click="ctrl.buyNowForPaymentGTW();" > BUY NOW </button>
+                                    </div> <!-- col.// -->
+                                </div> <!-- row.// -->
+
+
+
+
+
+
+
+
+
+
+
+                            </article> <!-- card-body.// -->
+                        </aside> <!-- col.// -->
+                    </div> <!-- row.// -->
+                </main> <!-- card.// -->
+
+
+                <!-- PRODUCT DETAIL .// -->
+
+            </div> <!-- col // -->
+
+        </div> <!-- row.// -->
+
+    </div><!-- container // -->
+
+
+
+
+    <div class="container">
+        <div class="row">
+
+
+        <div class="" ng-if="ctrl.showPaymentGateway">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="subtitle-doc" id="exampleModalLabel">Payment Mode</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="row">
+
+                            <aside class="col-sm-12">
+
+
+                                <div id="code_payment2">
+
+                                    <article class="card">
+                                        <div class="card-body p-5">
+
+                                            <ul class="nav bg radius nav-pills nav-fill mb-3" role="tablist">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active show" data-toggle="pill" href="#nav-tab-card">
+                                                        <i class="fa fa-credit-card"></i> Credit Card</a></li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="pill" href="#nav-tab-paypal">
+                                                        <i class="fab fa-paypal"></i>  Paypal</a></li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="pill" href="#nav-tab-bank">
+                                                        <i class="fa fa-university"></i>  Bank Transfer</a></li>
+                                            </ul>
+
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade active show" id="nav-tab-card">
+                                                    <p class="alert alert-success" ng-if="ctrl.paymentSuccess">Success</p>
+                                                    <form role="form">
+                                                        <div class="form-group">
+                                                            <label>Full name (on the card)</label>
+                                                            <input type="text" class="form-control" name="username" placeholder="" required="">
+                                                        </div> <!-- form-group.// -->
+
+                                                        <div class="form-group">
+                                                            <label>Card number</label>
+                                                            <div class="input-group">
+                                                                <input type="text" class="form-control" name="cardNumber" placeholder="">
+                                                                <div class="input-group-append">
+						<span class="input-group-text text-muted">
+							<i class="fab fa-cc-visa"></i> &nbsp; <i class="fab fa-cc-amex"></i> &nbsp;
+							<i class="fab fa-cc-mastercard"></i>
+						</span>
+                                                                </div>
+                                                            </div>
+                                                        </div> <!-- form-group.// -->
+
+                                                        <div class="row">
+                                                            <div class="col-sm-8">
+                                                                <div class="form-group">
+                                                                    <label><span class="hidden-xs">Expiration</span> </label>
+                                                                    <div class="input-group">
+                                                                        <input type="number" class="form-control" placeholder="MM" name="">
+                                                                        <input type="number" class="form-control" placeholder="YY" name="">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-sm-4">
+                                                                <div class="form-group">
+                                                                    <label data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">CVV <i class="fa fa-question-circle"></i></label>
+                                                                    <input type="number" class="form-control" required="">
+                                                                </div> <!-- form-group.// -->
+                                                            </div>
+                                                        </div> <!-- row.// -->
+                                                        <button class="subscribe btn btn-primary btn-block confirmBtn" type="button" ng-click="ctrl.addToOrders(ctrl.cakeDetailsList.id,'Online');"> Confirm  </button>
+                                                    </form>
+                                                </div> <!-- tab-pane.// -->
+                                                <div class="tab-pane fade" id="nav-tab-paypal">
+                                                    <p>Paypal is easiest way to pay online</p>
+                                                    <p>
+                                                        <button type="button" class="btn btn-primary"> <i class="fab fa-paypal"></i> Log in my Paypal </button>
+                                                    </p>
+                                                    <p><strong>Note:</strong> Only NEFT Transactions are allowed. </p>
+                                                </div>
+                                                <div class="tab-pane fade" id="nav-tab-bank">
+                                                    <p>Bank accaunt details</p>
+                                                    <dl class="param">
+                                                        <dt>BANK: </dt>
+                                                        <dd> THE WORLD BANK</dd>
+                                                    </dl>
+                                                    <dl class="param">
+                                                        <dt>Accaunt number: </dt>
+                                                        <dd> 12345678912345</dd>
+                                                    </dl>
+                                                    <dl class="param">
+                                                        <dt>IFSC Code: </dt>
+                                                        <dd> IFSC0011001</dd>
+                                                    </dl>
+                                                    <p><strong>Note:</strong> Only NEFT Transactions are allowed. </p>
+                                                </div> <!-- tab-pane.// -->
+                                            </div> <!-- tab-content .// -->
+
+                                        </div> <!-- card-body.// -->
+                                    </article> <!-- card.// -->
+
+                                </div> <!-- code-wrap.// -->
+
+                            </aside> <!-- col.// -->
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    </div>
+
+
+</section>
+
+
+
+
+
+<section class="section-content bg padding-y border-top" ng-if="ctrl.roleCart">
+    <div class="container">
+
+        <div class="row">
+
+            <main class="col-sm-9" ng-if="ctrl.cartList.length <= 0">
+                    No Items
+            </main>
+            <main class="col-sm-9" ng-if="ctrl.cartList.length > 0">
+
+                <div class="card">
+                    <table class="table table-hover shopping-cart-wrap">
+                        <thead class="text-muted">
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col" width="120">Quantity</th>
+                            <th scope="col" width="120">Price</th>
+                            <th scope="col" class="text-right" width="200">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="cart in ctrl.cartList">
+                            <td>
+                                <figure class="media">
+                                    <div class="img-wrap"><img ng-src="{{cart.image}}" class="img-thumbnail img-sm"></div>
+                                    <figcaption class="media-body">
+                                        <h6 class="title text-truncate">{{cart.description}} </h6>
+                                        <dl class="dlist-inline small">
+                                            <dt>Weight: </dt>
+                                            <dd>{{cart.weight}}</dd>
+                                        </dl>
+                                        <dl class="dlist-inline small">
+                                            <dt>Type: </dt>
+                                            <dd>{{cart.feature}}</dd>
+                                        </dl>
+                                    </figcaption>
+                                </figure>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"   ng-value="cart.quantity" readonly ng-model="ctrl.quantity">
+                            </td>
+                            <td>
+                                <div class="price-wrap">
+                                    <var class="price"> &#x20b9; {{cart.price}}</var>
+
+                                </div> <!-- price-wrap .// -->
+                            </td>
+                            <td class="text-right">
+
+                                <button type="button" class="btn btn-outline-danger" ng-click="ctrl.deleteFromCart();"> × Remove</button>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div> <!-- card.// -->
+
+            </main> <!-- col.// -->
+            <aside class="col-sm-3">
+                <p class="alert alert-success" style="display: none;">Add ₹ 5.00 of eligible items to your order to qualify for FREE Shipping. </p>
+
+
+                <dl class="dlist-align h4">
+                    <dt>Total:</dt>
+                    <dd class="text-right"><strong>&#x20b9; {{ctrl.totalPrice}}</strong></dd>
+                </dl>
+                <hr>
+
+
+                <figure class="itemside mb-3">
+                    <button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" type="button" style="width: 100%;">
+                        <i class="fa fa-shopping-cart"></i> Checkout
+                    </button>
+                </figure>
+
+
+            </aside> <!-- col.// -->
+        </div>
+
+    </div> <!-- container .//  -->
+</section>
+
+
+
+
+
+
+
+
+</body>
+</html>

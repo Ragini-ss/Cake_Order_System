@@ -1,0 +1,490 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="max-age=604800" />
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="author" content="Bootstrap-ecommerce by Vosidiy">
+
+<title>Make Bake and Take a Cake</title>
+
+<link href="images/logo.png" rel="shortcut icon" type="image/x-icon">
+
+<!-- jQuery -->
+<script src="js/jquery-2.0.0.min.js" type="text/javascript"></script>
+
+<!-- Bootstrap4 files-->
+<script src="js/bootstrap.bundle.min.js" type="text/javascript"></script>
+<link href="css/bootstrap.css" rel="stylesheet" type="text/css"/>
+
+<!-- Font awesome 5 -->
+<link href="fonts/fontawesome/css/fontawesome-all.min.css" type="text/css" rel="stylesheet">
+
+<!-- custom style -->
+<link href="css/ui.css" rel="stylesheet" type="text/css"/>
+<link href="css/responsive.css" rel="stylesheet" media="only screen and (max-width: 1200px)" />
+
+<!-- custom javascript -->
+<script src="js/script.js" type="text/javascript"></script>
+
+
+
+<script type="text/javascript">
+/// some script
+
+// jquery ready start
+$(document).ready(function() {
+	
+	$('.alert-success').hide();
+	 $('.confirmBtn').click(function(){
+		$('.alert-success').show();
+	 });
+
+}); 
+// jquery end
+</script>
+
+</head>
+<body>
+<header class="section-header">
+<nav class="navbar navbar-expand-lg navbar-light">
+  <div class="container">
+  	<a class="navbar-brand" href="home.html"><img class="logo" src="images/logo.png" alt="alibaba style e-commerce html template file" title="alibaba e-commerce html css theme"></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTop" aria-controls="navbarTop" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarTop">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown"><a href="#" class="nav-link" >   About Us </a>
+        </li>
+		<li class="nav-item dropdown"><a href="#" class="nav-link" >   Photo Gallary </a>
+        </li>
+		<li class="nav-item dropdown"><a href="#" class="nav-link" >   Contact Us </a>
+        </li>
+      </ul>
+      <ul class="navbar-nav">
+        <div class="col-auto">
+			<div class="widget-header dropdown">
+				<a href="#" data-toggle="dropdown" data-offset="20,10">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm fa fa-user"></i></div>
+						<div class="text-wrap text-dark">
+							Welcome,<br>Sandeep Wagh
+						</div>
+					</div>
+				</a>
+				 
+			</div>  <!-- widget-header .// -->
+			</div> <!-- col.// -->
+		
+		
+      </ul> <!-- navbar-nav.// -->
+    </div> <!-- collapse.// -->
+  </div>
+</nav>
+
+<section class="header-main">
+	<div class="container">
+<div class="row-sm align-items-center">
+	<div class="col-lg-4-24 col-sm-2">
+	 
+	</div>
+	<div class="col-lg-11-24 col-sm-8">
+			<form action="#" class="py-1">
+				<div class="input-group w-100">
+					<select class="custom-select"  name="category_name">
+						<option value="">All type</option>
+						<option value="">Special</option>
+						<option value="">Only best</option>
+						<option value="">Latest</option>
+					</select>
+				    <input type="text" class="form-control" style="width:50%;" placeholder="Search">
+				    <div class="input-group-append">
+				      <button class="btn btn-warning" type="submit">
+				        <i class="fa fa-search"></i> Search 
+				      </button>
+				    </div>
+			    </div>
+			</form> <!-- search-wrap .end// -->
+	</div> <!-- col.// -->
+	<div class="col-lg-9-24 col-sm-12">
+		<div class="widgets-wrap float-right row no-gutters py-1">
+			<div class="col-auto">
+			  <!-- widget-header .// -->
+			</div> <!-- col.// -->
+			<div class="col-auto">
+				<a href="cart.html" class="widget-header">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm fa fa-shopping-cart"></i></div>
+						<div class="text-wrap text-dark">
+							Order <br> Protection 
+						</div>
+					</div>
+				</a>
+			</div> <!-- col.// -->
+			<div class="col-auto">
+				<a href="#" class="widget-header">
+					<div class="icontext">
+						<div class="icon-wrap"><i class="text-warning icon-sm  fa fa-heart"></i></div>
+						<div class="text-wrap text-dark">
+							<span class="small round badge badge-secondary">0</span>
+							<div>Favorites</div>
+						</div>
+					</div>
+				</a>
+			</div> <!-- col.// -->
+		</div> <!-- widgets-wrap.// row.// -->
+	</div> <!-- col.// -->
+</div> <!-- row.// -->
+	</div> <!-- container.// -->
+</section> <!-- header-main .// -->
+</header> <!-- section-header.// -->
+
+
+<!-- ========================= SECTION CONTENT ========================= -->
+<section class="section-content bg padding-y border-top">
+<div class="container">
+
+<div class="row">
+	<main class="col-sm-9">
+
+<div class="card">
+<table class="table table-hover shopping-cart-wrap">
+<thead class="text-muted">
+<tr>
+  <th scope="col">Product</th>
+  <th scope="col" width="120">Quantity</th>
+  <th scope="col" width="120">Price</th>
+  <th scope="col" class="text-right" width="200">Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+	<td>
+<figure class="media">
+	<div class="img-wrap"><img src="images/cake_PNG13126.png" class="img-thumbnail img-sm"></div>
+	<figcaption class="media-body">
+		<h6 class="title text-truncate">Chocolate Cake </h6>
+		<dl class="dlist-inline small">
+		  <dt>Size: </dt>
+		  <dd>1 kg</dd>
+		</dl>
+		<dl class="dlist-inline small">
+		  <dt>Type: </dt>
+		  <dd>Veg</dd>
+		</dl>
+	</figcaption>
+</figure> 
+	</td>
+	<td> 
+		<input type="text" class="form-control" value="1" readonly/>
+	</td>
+	<td> 
+		<div class="price-wrap"> 
+			<var class="price">&#x20b9; 145</var> 
+			<small class="text-muted">(&#x20b9;5 each)</small> 
+		</div> <!-- price-wrap .// -->
+	</td>
+	<td class="text-right"> 
+	<a data-original-title="Save to Wishlist" title="" href="" class="btn btn-outline-success" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
+	<a href="" class="btn btn-outline-danger"> × Remove</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<figure class="media">
+	<div class="img-wrap"><img src="images/cake_PNG13127.png" class="img-thumbnail img-sm"></div>
+	<figcaption class="media-body">
+		<h6 class="title text-truncate">Chocolate Cake </h6>
+		<dl class="dlist-inline small">
+		  <dt>Size: </dt>
+		  <dd>1 kg</dd>
+		</dl>
+		<dl class="dlist-inline small">
+		  <dt>Type: </dt>
+		  <dd>Veg</dd>
+		</dl>
+	</figcaption>
+</figure> 
+	</td>
+	<td> 
+		<input type="text" class="form-control" value="1" readonly/>
+	</td>
+	<td> 
+		<div class="price-wrap"> 
+			<var class="price">&#x20b9; 35</var> 
+			<small class="text-muted">(&#x20b9;10 each)</small> 
+		</div> <!-- price-wrap .// -->
+	</td>
+	<td class="text-right"> 
+	<a data-original-title="Save to Wishlist" title="" href="" class="btn btn-outline-success" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
+	<a href="" class="btn btn-outline-danger btn-round"> × Remove</a>
+	</td>
+</tr>
+<tr>
+	<td>
+<figure class="media">
+	<div class="img-wrap"><img src="images/cake_PNG13126.png" class="img-thumbnail img-sm"></div>
+	<figcaption class="media-body">
+		<h6 class="title text-truncate">Chocolate Cake </h6>
+		<dl class="dlist-inline small">
+		  <dt>Size: </dt>
+		  <dd>1 kg</dd>
+		</dl>
+		<dl class="dlist-inline small">
+		  <dt>Type: </dt>
+		  <dd>Veg</dd>
+		</dl>
+	</figcaption>
+</figure> 
+	</td>
+	<td> 
+		<input type="text" class="form-control" value="1" readonly/>
+	</td>
+	<td> 
+		<div class="price-wrap"> 
+			<var class="price">&#x20b9; 45</var> 
+			<small class="text-muted">(&#x20b9;15 each)</small> 
+		</div> <!-- price-wrap .// -->
+	</td>
+	<td class="text-right"> 
+		<a data-original-title="Save to Wishlist" title="" href="" class="btn btn-outline-success" data-toggle="tooltip"> <i class="fa fa-heart"></i></a> 
+		<a href="" class="btn btn-outline-danger btn-round"> × Remove</a>
+	</td>
+</tr>
+</tbody>
+</table>
+</div> <!-- card.// -->
+
+	</main> <!-- col.// -->
+	<aside class="col-sm-3">
+<p class="alert alert-success">Add &#x20b9; 5.00 of eligible items to your order to qualify for FREE Shipping. </p>
+<dl class="dlist-align">
+  <dt>Total price: </dt>
+  <dd class="text-right">&#x20b9; 568</dd>
+</dl>
+<dl class="dlist-align">
+  <dt>Discount:</dt>
+  <dd class="text-right">&#x20b9; 658</dd>
+</dl>
+<dl class="dlist-align h4">
+  <dt>Total:</dt>
+  <dd class="text-right"><strong>&#x20b9; 1,650</strong></dd>
+</dl>
+<hr>
+<figure class="itemside mb-3">
+	<aside class="aside"><img src="images/icons/pay-visa.png"></aside>
+	 <div class="text-wrap small text-muted">
+Pay 84.78 AED ( Save 14.97 AED )
+By using ADCB Cards 
+	 </div>
+</figure>
+<figure class="itemside mb-3">
+	<aside class="aside"> <img src="images/icons/pay-mastercard.png"> </aside>
+	<div class="text-wrap small text-muted">
+Pay by MasterCard and Save 40%. <br>
+Lorem ipsum dolor 
+	</div>
+</figure>
+
+<figure class="itemside mb-3">
+	<button class="btn btn-warning btn-lg" data-toggle="modal" data-target="#exampleModal" data-whatever="@mdo" type="submit" style="width: 100%;">
+		<i class="fa fa-shopping-cart"></i> Checkout 
+	  </button>
+</figure>
+ 
+
+	</aside> <!-- col.// -->
+</div>
+
+</div> <!-- container .//  -->
+</section>
+<!-- ========================= SECTION CONTENT END// ========================= -->
+  
+
+<!-- ========================= FOOTER ========================= -->
+<footer class="section-footer bg-secondary">
+	<div class="container">
+		<section class="footer-top padding-top">
+			<div class="row">
+				<aside class="col-sm-3 col-md-3 white">
+					<h5 class="title">Customer Photo Gallary</h5>
+					<ul class="list-unstyled">
+						<li> <a href="#">Help center</a></li>
+						<li> <a href="#">Money refund</a></li>
+						<li> <a href="#">Terms and Policy</a></li>
+						<li> <a href="#">Open dispute</a></li>
+					</ul>
+				</aside>
+				<aside class="col-sm-3  col-md-3 white">
+					<h5 class="title">My Account</h5>
+					<ul class="list-unstyled">
+						<li> <a href="#"> User Login </a></li>
+						<li> <a href="#"> User register </a></li>
+						<li> <a href="#"> Account Setting </a></li>
+						<li> <a href="#"> My Orders </a></li>
+						<li> <a href="#"> My Wishlist </a></li>
+					</ul>
+				</aside>
+				<aside class="col-sm-3  col-md-3 white">
+					<h5 class="title">About</h5>
+					<ul class="list-unstyled">
+						<li> <a href="#"> Our history </a></li>
+						<li> <a href="#"> How to buy </a></li>
+						<li> <a href="#"> Delivery and payment </a></li>
+						<li> <a href="#"> Advertice </a></li>
+						<li> <a href="#"> Partnership </a></li>
+					</ul>
+				</aside>
+				<aside class="col-sm-3">
+					<article class="white">
+						<h5 class="title">Contacts</h5>
+						<p>
+							<strong>Phone: </strong> +123456789 <br> 
+						    <strong>Fax:</strong> +123456789
+						</p>
+
+						 <div class="btn-group white">
+						    <a class="btn btn-facebook" title="Facebook" target="_blank" href="#"><i class="fab fa-facebook-f  fa-fw"></i></a>
+						    <a class="btn btn-instagram" title="Instagram" target="_blank" href="#"><i class="fab fa-instagram  fa-fw"></i></a>
+						    <a class="btn btn-youtube" title="Youtube" target="_blank" href="#"><i class="fab fa-youtube  fa-fw"></i></a>
+						    <a class="btn btn-twitter" title="Twitter" target="_blank" href="#"><i class="fab fa-twitter  fa-fw"></i></a>
+						</div>
+					</article>
+				</aside>
+			</div> <!-- row.// -->
+			<br> 
+		</section>
+		 
+	</div><!-- //container -->
+</footer>
+<!-- ========================= FOOTER END // ========================= -->
+
+
+
+
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="subtitle-doc" id="exampleModalLabel">Payment Mode</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+       
+					<div class="row">
+	
+	<aside class="col-sm-12">
+
+	 
+		<div id="code_payment2">
+
+		<article class="card">
+		<div class="card-body p-5">
+
+		<ul class="nav bg radius nav-pills nav-fill mb-3" role="tablist">
+			<li class="nav-item">
+				<a class="nav-link active show" data-toggle="pill" href="#nav-tab-card">
+				<i class="fa fa-credit-card"></i> Credit Card</a></li>
+			<li class="nav-item">
+				<a class="nav-link" data-toggle="pill" href="#nav-tab-paypal">
+				<i class="fab fa-paypal"></i>  Paypal</a></li>
+			<li class="nav-item">
+				<a class="nav-link" data-toggle="pill" href="#nav-tab-bank">
+				<i class="fa fa-university"></i>  Bank Transfer</a></li>
+		</ul>
+
+		<div class="tab-content">
+		<div class="tab-pane fade active show" id="nav-tab-card">
+			 <p class="alert alert-success">Success</p> 
+			<form role="form">
+			<div class="form-group">
+				<label for="username">Full name (on the card)</label>
+				<input type="text" class="form-control" name="username" placeholder="" required="">
+			</div> <!-- form-group.// -->
+
+			<div class="form-group">
+				<label for="cardNumber">Card number</label>
+				<div class="input-group">
+					<input type="text" class="form-control" name="cardNumber" placeholder="">
+					<div class="input-group-append">
+						<span class="input-group-text text-muted">
+							<i class="fab fa-cc-visa"></i> &nbsp; <i class="fab fa-cc-amex"></i> &nbsp; 
+							<i class="fab fa-cc-mastercard"></i> 
+						</span>
+					</div>
+				</div>
+			</div> <!-- form-group.// -->
+
+			<div class="row">
+				<div class="col-sm-8">
+					<div class="form-group">
+						<label><span class="hidden-xs">Expiration</span> </label>
+						<div class="input-group">
+							<input type="number" class="form-control" placeholder="MM" name="">
+							<input type="number" class="form-control" placeholder="YY" name="">
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label data-toggle="tooltip" title="" data-original-title="3 digits code on back side of the card">CVV <i class="fa fa-question-circle"></i></label>
+						<input type="number" class="form-control" required="">
+					</div> <!-- form-group.// -->
+				</div>
+			</div> <!-- row.// -->
+			<button class="subscribe btn btn-primary btn-block confirmBtn" type="button"> Confirm  </button>
+			</form>
+		</div> <!-- tab-pane.// -->
+		<div class="tab-pane fade" id="nav-tab-paypal">
+		<p>Paypal is easiest way to pay online</p>
+		<p>
+		<button type="button" class="btn btn-primary"> <i class="fab fa-paypal"></i> Log in my Paypal </button>
+		</p>
+		<p><strong>Note:</strong> Only NEFT Transactions are allowed. </p>
+		</div>
+		<div class="tab-pane fade" id="nav-tab-bank">
+		<p>Bank accaunt details</p>
+		<dl class="param">
+		  <dt>BANK: </dt>
+		  <dd> THE WORLD BANK</dd>
+		</dl>
+		<dl class="param">
+		  <dt>Accaunt number: </dt>
+		  <dd> 12345678912345</dd>
+		</dl>
+		<dl class="param">
+		  <dt>IFSC Code: </dt>
+		  <dd> IFSC0011001</dd>
+		</dl>
+		<p><strong>Note:</strong> Only NEFT Transactions are allowed. </p>
+		</div> <!-- tab-pane.// -->
+		</div> <!-- tab-content .// -->
+
+		</div> <!-- card-body.// -->
+		</article> <!-- card.// -->
+
+		</div> <!-- code-wrap.// -->
+
+			</aside> <!-- col.// -->
+		</div>
+				 
+      </div>
+     
+    </div>
+  </div>
+</div>
+ 
+
+	
+
+
+</body>
+</html>
